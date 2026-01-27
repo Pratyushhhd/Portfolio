@@ -35,3 +35,11 @@ const toggle = document.getElementById("themeToggle");
 toggle.addEventListener("click", () => {
     document.body.classList.toggle("light-mode");
 });
+
+// Automatically set current year in footer
+document.addEventListener("DOMContentLoaded", function () {
+    const yearElement = document.getElementById("year");
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+});

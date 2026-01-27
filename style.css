@@ -113,3 +113,13 @@ section {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Footer styling */
+
+footer.footer {
+    text-align: center;
+    padding: 0.5rem 0;
+    background: #f8f9fa;
+    font-size: 0.9rem;
+    color: #555;
+}
