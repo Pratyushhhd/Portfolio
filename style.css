@@ -79,12 +79,24 @@ section {
 }
 
 /* Projects */
+#projects .col-md-4 {
+    display: flex;
+}
+
 .project-card {
-    background: var(--bg-light);
-    padding: 20px;
-    border-radius: 14px;
-    text-align: center;
-    transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+        background: var(--bg-light);
+            transition: transform 0.3s ease;
+                padding: 20px;
+            border-radius: 14px;
+                text-align: center;
+
+
+
+
 }
 
 .project-card:hover {
