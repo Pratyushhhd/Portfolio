@@ -37,6 +37,7 @@ export function useTypingEffect(words, typingSpeed = 100, deletingSpeed = 60, pa
             clearTimeout(timeout);
             clearInterval(cursorInterval);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return { text, showCursor };
