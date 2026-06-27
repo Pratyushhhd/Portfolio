@@ -22,6 +22,13 @@ const projects = [
         url: 'https://pratyushhhd.github.io/Budget_Management_Tool/',
         icon: 'fa-solid fa-chart-line',
     },
+    {
+        title: 'Pomodoro Timer',
+        desc: 'Focus timer with customizable work/break intervals, session tracking, and a clean minimal interface.',
+        tags: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://pratyushhhd.github.io/Pomodoro/',
+        icon: 'fa-solid fa-clock',
+    },
 ];
 
 export default function Projects() {
