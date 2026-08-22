@@ -1,33 +1,46 @@
 import { useState, useEffect, useRef } from 'react';
+import Icon from './Icon';
 
 const projects = [
+    {
+        title: 'Bachat',
+        desc: 'Full-stack finance dashboard with secure authentication — track income & expenses, build budgets, reach savings goals and understand where your money goes.',
+        tags: ['Next.js', 'React', 'Tailwind CSS'],
+        url: 'https://bachat-xi.vercel.app/',
+        repo: 'https://github.com/Pratyushhhd',
+        icon: 'wallet',
+    },
     {
         title: 'Calculator App',
         desc: 'Responsive calculator with clean UI, supporting basic arithmetic operations with keyboard input.',
         tags: ['HTML', 'CSS', 'JavaScript'],
         url: 'https://pratyushhhd.github.io/Calculator/',
-        icon: 'fa-solid fa-calculator',
+        repo: 'https://github.com/Pratyushhhd/Calculator',
+        icon: 'calculator',
     },
     {
         title: 'Portfolio Website',
         desc: 'Personal portfolio with scroll animations, dark/light mode, and a modern React-powered interface.',
         tags: ['React', 'Bootstrap', 'CSS'],
-        url: '#',
-        icon: 'fa-solid fa-laptop-code',
+        url: 'https://www.maharjanpratyush.com.np',
+        repo: 'https://github.com/Pratyushhhd',
+        icon: 'laptop-code',
     },
     {
         title: 'Budget Management Tool',
         desc: 'Expense & income tracker with category filtering, interactive charts, and real-time balance updates.',
         tags: ['JavaScript', 'Charts', 'LocalStorage'],
         url: 'https://pratyushhhd.github.io/Budget_Management_Tool/',
-        icon: 'fa-solid fa-chart-line',
+        repo: 'https://github.com/Pratyushhhd/Budget_Management_Tool',
+        icon: 'chart-line',
     },
     {
         title: 'Pomodoro Timer',
         desc: 'Focus timer with customizable work/break intervals, session tracking, and a clean minimal interface.',
         tags: ['HTML', 'CSS', 'JavaScript'],
         url: 'https://pratyushhhd.github.io/Pomodoro/',
-        icon: 'fa-solid fa-clock',
+        repo: 'https://github.com/Pratyushhhd/Pomodoro',
+        icon: 'clock',
     },
 ];
 
@@ -53,16 +66,17 @@ export default function Projects() {
                 <p className={`section-subtitle ${isVisible ? 'animate show animate-delay-1' : 'animate'}`}>
                     A selection of projects I've built with passion and precision
                 </p>
-                <div className="row g-4 mt-4">
+                <div className="projects-grid">
                     {projects.map((p, idx) => (
-                        <div className="col-md-4" key={p.title}>
-                            <div
-                                className={`project-card ${isVisible ? 'animate show' : 'animate'}`}
-                                style={{ animationDelay: `${idx * 150}ms` }}
-                            >
+                        <div
+                            key={p.title}
+                            className={isVisible ? 'animate show' : 'animate'}
+                            style={{ transitionDelay: `${idx * 150}ms` }}
+                        >
+                            <div className="project-card">
                                 <div className="project-card-body">
                                     <div className="project-icon">
-                                        <i className={p.icon}></i>
+                                        <Icon name={p.icon}></Icon>
                                     </div>
                                     <h4>{p.title}</h4>
                                     <p>{p.desc}</p>
@@ -71,9 +85,14 @@ export default function Projects() {
                                             <span className="project-tag" key={t}>{t}</span>
                                         ))}
                                     </div>
-                                    <a href={p.url} target="_blank" rel="noopener" className="project-btn">
-                                        Live Demo <i className="fas fa-arrow-right"></i>
-                                    </a>
+                                    <div className="project-links">
+                                        <a href={p.url} target="_blank" rel="noopener noreferrer" className="project-btn">
+                                            Live Demo <Icon name="arrow-right"></Icon>
+                                        </a>
+                                        <a href={p.repo} target="_blank" rel="noopener noreferrer" className="project-btn">
+                                            <Icon name="github"></Icon> Code
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

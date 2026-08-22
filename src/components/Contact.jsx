@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import Icon from './Icon';
+
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xjybzpgv';
 
 export default function Contact() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
     const [form, setForm] = useState({ name: '', email: '', message: '' });
-    const [submitted, setSubmitted] = useState(false);
+    const [status, setStatus] = useState('idle'); // idle | sending | sent | error
 
     useEffect(() => {
         const obs = new IntersectionObserver(
@@ -15,18 +18,56 @@ export default function Contact() {
         return () => obs.disconnect();
     }, []);
 
+    const configured = !FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID');
+
     const handleChange = (e) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        if (status === 'sent' || status === 'error') setStatus('idle');
     };
 
-    const handleSubmit = (e) => {
+    const mailtoFallback = () => {
+        const subject = `Portfolio Inquiry from ${encodeURIComponent(form.name)}`;
+        const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`);
+        window.location.assign(`mailto:pratyushmaharjan90@gmail.com?subject=${subject}&body=${body}`);
+        setForm({ name: '', email: '', message: '' });
+        setStatus('sent');
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (form.name && form.email && form.message) {
-            window.location.href = `mailto:pratyushmaharjan90@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(form.name)}&body=${encodeURIComponent(form.message)}`;
-            setSubmitted(true);
+        if (!form.name || !form.email || !form.message || status === 'sending') return;
+
+        if (!configured) {
+            mailtoFallback();
+            return;
+        }
+
+        setStatus('sending');
+        try {
+            const res = await fetch(FORMSPREE_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({
+                    name: form.name,
+                    email: form.email,
+                    message: form.message,
+                    _gotcha: undefined,
+                }),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            setStatus('sent');
             setForm({ name: '', email: '', message: '' });
+        } catch {
+            setStatus('error');
         }
     };
+
+    const label = {
+        idle: <><Icon name="paper-plane"></Icon> Send Message</>,
+        sending: <><Icon name="paper-plane"></Icon> Sending...</>,
+        sent: <><Icon name="check"></Icon> Message Sent!</>,
+        error: <><Icon name="paper-plane"></Icon> Try Again</>,
+    }[status];
 
     return (
         <section id="contact" className="contact" ref={ref}>
@@ -44,7 +85,7 @@ export default function Contact() {
 
                         <div className="contact-detail">
                             <div className="contact-detail-icon">
-                                <i className="fas fa-envelope"></i>
+                                <Icon name="envelope"></Icon>
                             </div>
                             <div className="contact-detail-text">
                                 <strong>Email</strong>
@@ -54,7 +95,7 @@ export default function Contact() {
 
                         <div className="contact-detail">
                             <div className="contact-detail-icon">
-                                <i className="fas fa-phone"></i>
+                                <Icon name="phone"></Icon>
                             </div>
                             <div className="contact-detail-text">
                                 <strong>Phone</strong>
@@ -64,7 +105,7 @@ export default function Contact() {
 
                         <div className="contact-detail">
                             <div className="contact-detail-icon">
-                                <i className="fas fa-location-dot"></i>
+                                <Icon name="location-dot"></Icon>
                             </div>
                             <div className="contact-detail-text">
                                 <strong>Location</strong>
@@ -73,19 +114,20 @@ export default function Contact() {
                         </div>
 
                         <div className="contact-social">
-                            <a href="https://github.com/Pratyushhhd" target="_blank" rel="noopener" aria-label="GitHub">
-                                <i className="fab fa-github"></i>
+                            <a href="https://github.com/Pratyushhhd" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                <Icon name="github"></Icon>
                             </a>
-                            <a href="https://www.linkedin.com/in/pratyush-maharjan-1205a533b" target="_blank" rel="noopener" aria-label="LinkedIn">
-                                <i className="fab fa-linkedin-in"></i>
+                            <a href="https://www.linkedin.com/in/pratyush-maharjan-1205a533b" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                <Icon name="linkedin-in"></Icon>
                             </a>
                             <a href="mailto:pratyushmaharjan90@gmail.com" aria-label="Email">
-                                <i className="fas fa-envelope"></i>
+                                <Icon name="envelope"></Icon>
                             </a>
                         </div>
                     </div>
 
-                    <form className="contact-form" onSubmit={handleSubmit}>
+                    <form className="contact-form" onSubmit={handleSubmit} noValidate={false}>
+                        <input type="text" name="_gotcha" tabIndex="-1" autoComplete="off" style={{ display: 'none' }} aria-hidden="true" />
                         <div className="form-group">
                             <label htmlFor="name">Your Name</label>
                             <input
@@ -124,13 +166,14 @@ export default function Contact() {
                                 required
                             ></textarea>
                         </div>
-                        <button type="submit" className="btn btn-primary-custom w-100" style={{ justifyContent: 'center' }}>
-                            {submitted ? (
-                                <><i className="fas fa-check"></i> Message Sent!</>
-                            ) : (
-                                <><i className="fas fa-paper-plane"></i> Send Message</>
-                            )}
+                        <button type="submit" className="btn-primary-custom contact-submit" disabled={status === 'sending'}>
+                            {label}
                         </button>
+                        {status === 'error' && (
+                            <p className="form-status" role="alert">
+                                Couldn't send right now — please email me directly instead.
+                            </p>
+                        )}
                     </form>
                 </div>
             </div>

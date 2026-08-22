@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import Icon from './Icon';
 
 export default function Footer() {
-    const [year] = useState(new Date().getFullYear());
+    const year = new Date().getFullYear();
 
     return (
         <footer className="footer">
@@ -11,7 +11,7 @@ export default function Footer() {
                 </p>
                 <p>&copy; {year} Pratyush Maharjan. All rights reserved.</p>
                 <p style={{ fontSize: '0.8rem', marginTop: 4 }}>
-                    Built with <i className="fas fa-heart" style={{ color: 'var(--accent)' }}></i> using React &amp; Bootstrap
+                    Built with <Icon name="heart" style={{ color: 'var(--accent)' }}></Icon> using React
                 </p>
             </div>
         </footer>

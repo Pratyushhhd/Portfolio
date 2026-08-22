@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import Icon from './Icon';
 
 const skills = [
-    { name: 'HTML & CSS', level: 92, icon: 'fa-brands fa-html5', desc: 'Semantic markup, Flexbox, Grid, Animations' },
-    { name: 'JavaScript', level: 85, icon: 'fa-brands fa-js', desc: 'ES6+, DOM, Async, APIs' },
-    { name: 'Bootstrap', level: 88, icon: 'fa-brands fa-bootstrap', desc: 'Responsive layouts, Components, Utility classes' },
-    { name: 'React', level: 70, icon: 'fa-brands fa-react', desc: 'Hooks, State, Components, JSX' },
-    { name: 'Git & GitHub', level: 80, icon: 'fa-brands fa-github', desc: 'Version control, Collaboration, Workflows' },
-    { name: 'UI/UX Design', level: 75, icon: 'fa-solid fa-palette', desc: 'Figma, Color theory, Prototyping' },
+    { name: 'HTML & CSS', level: 92, icon: 'html5', desc: 'Semantic markup, Flexbox, Grid, Animations' },
+    { name: 'JavaScript', level: 85, icon: 'square-js', desc: 'ES6+, DOM, Async, APIs' },
+    { name: 'Bootstrap', level: 88, icon: 'bootstrap', desc: 'Responsive layouts, Components, Utility classes' },
+    { name: 'React', level: 70, icon: 'react', desc: 'Hooks, State, Components, JSX' },
+    { name: 'Git & GitHub', level: 80, icon: 'github', desc: 'Version control, Collaboration, Workflows' },
+    { name: 'UI/UX Design', level: 75, icon: 'palette', desc: 'Figma, Color theory, Prototyping' },
 ];
 
 export default function Skills() {
@@ -35,23 +36,26 @@ export default function Skills() {
                     {skills.map((s, idx) => (
                         <div
                             key={s.name}
-                            className={`skill-card ${isVisible ? 'animate show' : 'animate'}`}
-                            style={{ animationDelay: `${idx * 100}ms` }}
+                            className={isVisible ? 'animate show' : 'animate'}
+                            style={{ transitionDelay: `${idx * 100}ms` }}
                         >
+                            <div className="skill-card">
                             <div className="skill-header">
                                 <div className="skill-icon">
-                                    <i className={s.icon}></i>
+                                    <Icon name={s.icon}></Icon>
                                 </div>
                                 <div className="skill-info">
                                     <h4>{s.name}</h4>
                                     <span>{s.desc}</span>
                                 </div>
+                                <span className="skill-percent">{s.level}%</span>
                             </div>
-                            <div className="skill-bar">
-                                <div
-                                    className={`skill-bar-fill ${isVisible ? 'animate' : ''}`}
-                                    style={{ '--target-width': `${s.level}%` }}
-                                ></div>
+                                <div className="skill-bar">
+                                    <div
+                                        className={`skill-bar-fill ${isVisible ? 'filled' : ''}`}
+                                        style={{ '--target-width': `${s.level}%` }}
+                                    ></div>
+                                </div>
                             </div>
                         </div>
                     ))}

@@ -1,4 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
+import Icon from './Icon';
+
+function CountUp({ target, suffix = '', start }) {
+    const [value, setValue] = useState(0);
+
+    useEffect(() => {
+        if (!start || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let raf;
+        const t0 = performance.now();
+        const duration = 1500;
+        const tick = (t) => {
+            const p = Math.min((t - t0) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            setValue(Math.round(eased * target));
+            if (p < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf);
+    }, [start, target]);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return <>{target}{suffix}</>;
+    }
+    return <>{value}{suffix}</>;
+}
 
 export default function About() {
     const [isVisible, setIsVisible] = useState(false);
@@ -13,6 +38,12 @@ export default function About() {
         return () => obs.disconnect();
     }, []);
 
+    const stats = [
+        { target: 2, suffix: '+', label: 'Years Learning' },
+        { target: 5, suffix: '+', label: 'Projects' },
+        { target: 10, suffix: '+', label: 'Technologies' },
+    ];
+
     return (
         <section id="about" className="about section-alt" ref={ref}>
             <div className="container">
@@ -20,7 +51,7 @@ export default function About() {
                     <div className="about-image-wrapper">
                         <div className="about-image-frame">
                             <div className="avatar-placeholder">
-                                <i className="fas fa-user-astronaut"></i>
+                                <Icon name="user-astronaut"></Icon>
                             </div>
                         </div>
                     </div>
@@ -41,18 +72,14 @@ export default function About() {
                             and modern web practices. Outside of coding, I enjoy playing futsal and guitar.
                         </p>
                         <div className="about-stats">
-                            <div className="stat-item">
-                                <span className="stat-number">2+</span>
-                                <span className="stat-label">Years Learning</span>
-                            </div>
-                            <div className="stat-item">
-                                <span className="stat-number">5+</span>
-                                <span className="stat-label">Projects</span>
-                            </div>
-                            <div className="stat-item">
-                                <span className="stat-number">10+</span>
-                                <span className="stat-label">Technologies</span>
-                            </div>
+                            {stats.map(s => (
+                                <div className="stat-item" key={s.label}>
+                                    <span className="stat-number">
+                                        <CountUp target={s.target} suffix={s.suffix} start={isVisible} />
+                                    </span>
+                                    <span className="stat-label">{s.label}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

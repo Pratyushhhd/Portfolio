@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 
 export function useTypingEffect(words, typingSpeed = 100, deletingSpeed = 60, pause = 2000) {
-    const [text, setText] = useState('');
-    const [showCursor, setShowCursor] = useState(true);
+    const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const [text, setText] = useState(() => (reducedMotion() ? words[0] : ''));
+    const [showCursor, setShowCursor] = useState(() => !reducedMotion());
 
     useEffect(() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;

@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useTypingEffect } from '../hooks/useTypingEffect';
 
 export default function Home() {
@@ -9,7 +10,7 @@ export default function Home() {
         <section id="home" className="home">
             <div className="home-container animate show">
                 <p style={{ color: 'var(--accent)', fontWeight: 500, fontSize: '1.05rem', marginBottom: '0.5rem' }}>
-                    <i className="fas fa-code" style={{ marginRight: 8 }}></i>
+                    <Icon name="code" style={{ marginRight: 8 }}></Icon>
                     Welcome to my portfolio
                 </p>
                 <h1 className="hero-title">
@@ -24,11 +25,14 @@ export default function Home() {
                     with modern technologies and pixel-perfect attention to detail.
                 </p>
                 <div className="button-container">
-                    <a href="#contact" className="btn btn-primary-custom">
-                        <i className="fas fa-paper-plane"></i> Hire Me
+                    <a href="#contact" className="btn-primary-custom">
+                        <Icon name="paper-plane"></Icon> Hire Me
                     </a>
-                    <a href="#projects" className="btn btn-outline-custom">
-                        <i className="fas fa-eye"></i> View Projects
+                    <a href="#projects" className="btn-outline-custom">
+                        <Icon name="eye"></Icon> View Projects
+                    </a>
+                    <a href="/resume.pdf" download className="btn-outline-custom">
+                        <Icon name="download"></Icon> Download CV
                     </a>
                 </div>
             </div>

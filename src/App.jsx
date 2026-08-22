@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import Icon from './components/Icon';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
@@ -36,7 +37,7 @@ function BackToTop() {
 
     return (
         <button id="backToTop" className="back-to-top" onClick={scrollToTop} aria-label="Back to top">
-            <i className="fas fa-arrow-up"></i>
+            <Icon name="arrow-up"></Icon>
         </button>
     );
 }
@@ -71,7 +72,11 @@ const sections = ['home', 'about', 'skills', 'projects', 'contact'];
 function App() {
     const [activeSection, setActiveSection] = useState('home');
     const [theme, setTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'dark';
+        return (
+            document.documentElement.getAttribute('data-theme') ||
+            localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        );
     });
 
     useEffect(() => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Icon from './Icon';
 
 const links = [
     { id: 'home', label: 'Home' },
@@ -19,8 +20,8 @@ export default function Navbar({ activeSection, theme, toggleTheme }) {
     }, []);
 
     return (
-        <nav className={`navbar navbar-expand-lg fixed-top ${scrolled ? 'navbar-scrolled' : ''}`}>
-            <div className="container">
+        <nav className={`navbar fixed-top ${scrolled ? 'navbar-scrolled' : ''}`}>
+            <div className="container nav-inner">
                 <a className="navbar-brand" href="#home">
                     Praty<span>ush</span>
                 </a>
@@ -32,15 +33,14 @@ export default function Navbar({ activeSection, theme, toggleTheme }) {
                     aria-controls="navbarNav"
                     aria-expanded={menuOpen}
                     aria-label="Toggle navigation"
-                    style={{ border: 'none', color: 'var(--text-main)' }}
                 >
-                    <i className={`fas ${menuOpen ? 'fa-times' : 'fa-bars'} fs-5`}></i>
+                    <Icon name={menuOpen ? 'xmark' : 'bars'} />
                 </button>
 
-                <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarNav">
-                    <ul className="navbar-nav ms-auto align-items-lg-center gap-3">
+                <div className={`nav-collapse ${menuOpen ? 'open' : ''}`} id="navbarNav">
+                    <ul className="nav-menu">
                         {links.map(l => (
-                            <li className="nav-item" key={l.id}>
+                            <li key={l.id}>
                                 <a
                                     className={`nav-link ${activeSection === l.id ? 'active' : ''}`}
                                     href={`#${l.id}`}
@@ -50,18 +50,14 @@ export default function Navbar({ activeSection, theme, toggleTheme }) {
                                 </a>
                             </li>
                         ))}
-                        <li className="nav-item">
+                        <li>
                             <button
                                 id="themeToggle"
                                 className="theme-toggle"
                                 onClick={toggleTheme}
                                 aria-label="Toggle theme"
                             >
-                                {theme === 'dark' ? (
-                                    <i className="fas fa-sun"></i>
-                                ) : (
-                                    <i className="fas fa-moon"></i>
-                                )}
+                                <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
                             </button>
                         </li>
                     </ul>
