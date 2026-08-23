@@ -7,6 +7,7 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import PortfolioAssistant from './components/ai/PortfolioAssistant';
 
 function ScrollProgress() {
     useEffect(() => {
@@ -117,6 +118,7 @@ function App() {
             <Footer />
             <BackToTop />
             <FloatingNavDots activeSection={activeSection} />
+            <PortfolioAssistant />
         </>
     );
 }

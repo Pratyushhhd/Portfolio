@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import Icon from './Icon';
 
 function CountUp({ target, suffix = '', start }) {
     const [value, setValue] = useState(0);
@@ -50,9 +49,12 @@ export default function About() {
                 <div className={`about-grid ${isVisible ? 'animate show' : 'animate'}`}>
                     <div className="about-image-wrapper">
                         <div className="about-image-frame">
-                            <div className="avatar-placeholder">
-                                <Icon name="user-astronaut"></Icon>
-                            </div>
+                            <img
+                                src="pratyush.jpg"
+                                alt="Pratyush Maharjan"
+                                className="about-photo"
+                                loading="lazy"
+                            />
                         </div>
                     </div>
                     <div className="about-content">

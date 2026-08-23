@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import Icon from './Icon';
 
 const projects = [
     {
+        id: 'bachat',
         title: 'Bachat',
         desc: 'Full-stack finance dashboard with secure authentication — track income & expenses, build budgets, reach savings goals and understand where your money goes.',
         tags: ['Next.js', 'React', 'Tailwind CSS'],
@@ -11,6 +12,7 @@ const projects = [
         icon: 'wallet',
     },
     {
+        id: 'calculator',
         title: 'Calculator App',
         desc: 'Responsive calculator with clean UI, supporting basic arithmetic operations with keyboard input.',
         tags: ['HTML', 'CSS', 'JavaScript'],
@@ -19,6 +21,7 @@ const projects = [
         icon: 'calculator',
     },
     {
+        id: 'portfolio',
         title: 'Portfolio Website',
         desc: 'Personal portfolio with scroll animations, dark/light mode, and a modern React-powered interface.',
         tags: ['React', 'Bootstrap', 'CSS'],
@@ -27,6 +30,7 @@ const projects = [
         icon: 'laptop-code',
     },
     {
+        id: 'budget-tool',
         title: 'Budget Management Tool',
         desc: 'Expense & income tracker with category filtering, interactive charts, and real-time balance updates.',
         tags: ['JavaScript', 'Charts', 'LocalStorage'],
@@ -35,6 +39,7 @@ const projects = [
         icon: 'chart-line',
     },
     {
+        id: 'pomodoro',
         title: 'Pomodoro Timer',
         desc: 'Focus timer with customizable work/break intervals, session tracking, and a clean minimal interface.',
         tags: ['HTML', 'CSS', 'JavaScript'],
@@ -46,6 +51,7 @@ const projects = [
 
 export default function Projects() {
     const [isVisible, setIsVisible] = useState(false);
+    const [highlighted, setHighlighted] = useState([]);
     const ref = useRef(null);
 
     useEffect(() => {
@@ -55,6 +61,16 @@ export default function Projects() {
         );
         if (ref.current) obs.observe(ref.current);
         return () => obs.disconnect();
+    }, []);
+
+    useEffect(() => {
+        let timer;
+        const onView = (e) => {
+            setHighlighted(e.detail || []);
+            timer = setTimeout(() => setHighlighted([]), 3200);
+        };
+        window.addEventListener('orbit:view-projects', onView);
+        return () => { window.removeEventListener('orbit:view-projects', onView); clearTimeout(timer); };
     }, []);
 
     return (
@@ -73,7 +89,7 @@ export default function Projects() {
                             className={isVisible ? 'animate show' : 'animate'}
                             style={{ transitionDelay: `${idx * 150}ms` }}
                         >
-                            <div className="project-card">
+                            <div className={`project-card ${highlighted.includes(p.id) ? 'proj-highlight' : ''}`}>
                                 <div className="project-card-body">
                                     <div className="project-icon">
                                         <Icon name={p.icon}></Icon>
@@ -102,3 +118,4 @@ export default function Projects() {
         </section>
     );
 }
+
