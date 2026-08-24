@@ -108,6 +108,16 @@ export const contact = {
     linkedin: 'https://www.linkedin.com/in/pratyush-maharjan-1205a533b',
 };
 
+export const certifications = [
+    {
+        title: 'React Development',
+        issuer: 'Prime College',
+        date: 'July 2026',
+        description: 'Certificate awarded for completing React development training/coursework.',
+        skills: ['React.js', 'JavaScript', 'Components', 'Hooks', 'Frontend Development'],
+    },
+];
+
 export const sections = {
     home: '#home',
     about: '#about',

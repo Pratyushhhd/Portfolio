@@ -1,4 +1,4 @@
-import { personal, skills, projects, contact } from '../../data/portfolioData';
+import { personal, skills, projects, contact, certifications } from '../../data/portfolioData';
 
 // Offline knowledge engine. Answers are composed ONLY from portfolioData.
 // Used when no VITE_AI_API_URL proxy is configured (e.g. static GitHub Pages).
@@ -7,6 +7,7 @@ const NAV_LINKS = {
     about: { label: 'About Pratyush', target: '#about', type: 'section' },
     skills: { label: 'View Skills', target: '#skills', type: 'section' },
     projects: { label: 'View Projects', target: '#projects', type: 'section' },
+    certifications: { label: 'View Certifications', target: '#certifications', type: 'section' },
     contact: { label: 'Contact Pratyush', target: '#contact', type: 'section' },
 };
 
@@ -157,6 +158,16 @@ export function getLocalReply(rawInput) {
         };
     }
 
+    // Certification
+    if (has(t, ['certificate', 'certification', 'certified', 'credential', 'prime college', 'training course'])) {
+        const c = certifications[0];
+        return {
+            text: `Yes — Pratyush holds a ${c.title} certificate issued by ${c.issuer} (${c.date}), awarded for completing React development training/coursework. It covered ${c.skills.join(', ')}. You can view it in the Certifications section.`,
+            links: [NAV_LINKS.certifications, NAV_LINKS.skills],
+            suggestions: ['What technologies does he use?', 'Why should I hire Pratyush?'],
+        };
+    }
+
     // Skills summary
     if (has(t, ['skill', 'technolog', 'tech stack', 'stack', 'tools', 'what does he know', 'what can he do', 'summary'])) {
         const top = skills.filter(s => s.level).sort((a, b) => b.level - a.level).slice(0, 4);
@@ -198,7 +209,7 @@ export function getLocalReply(rawInput) {
 
     // Fallback
     return {
-        text: `I don't have verified information about that in Pratyush's portfolio yet — and I'd rather say so than make something up. I can tell you about his projects, skills, technologies, education, or how to contact him.`,
+        text: `I don't have verified information about that in Pratyush's portfolio yet — and I'd rather say so than make something up. I can tell you about his projects, skills, technologies, certifications, education, or how to contact him.`,
         links: [NAV_LINKS.projects, NAV_LINKS.contact],
         suggestions: ['What projects has he built?', 'Why should I hire Pratyush?', 'How can I contact Pratyush?'],
     };
@@ -208,10 +219,14 @@ export function buildSystemPrompt() {
     const projLines = projects.map(p =>
         `- ${p.name}: ${p.description} Tech: ${p.technologies.join(', ')}. Features: ${p.features.join('; ')}.${p.liveUrl ? ` Live: ${p.liveUrl}` : ''}`
     ).join('\n');
+    const certLines = certifications.map(c =>
+        `- ${c.title} from ${c.issuer} (${c.date}). ${c.description} Covered: ${c.skills.join(', ')}.`
+    ).join('\n');
     return (
-        `You are ${personal.name}'s portfolio assistant. Help visitors understand Pratyush's skills, projects, technologies, and education.\n\n` +
+        `You are ${personal.name}'s portfolio assistant. Help visitors understand Pratyush's skills, projects, technologies, certifications, and education.\n\n` +
         `VERIFIED FACTS:\nRole: ${personal.role}. Location: ${personal.location}. Education: ${personal.education}.\n` +
         `Skills: ${skills.map(s => `${s.name}${s.level ? ` (${s.level}%)` : ''}`).join(', ')}.\nProjects:\n${projLines}\n` +
+        `Certifications:\n${certLines}\n` +
         `Contact: email ${contact.email}, phone ${contact.phone}, GitHub ${contact.github}, LinkedIn ${contact.linkedin}.\n\n` +
         `RULES: Use ONLY the facts above. Never fabricate experience, employers, certifications, awards, statistics, or technologies. ` +
         `If asked about something not covered, say it isn't available and point to the contact section when appropriate. ` +

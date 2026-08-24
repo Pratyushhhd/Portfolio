@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import Icon from './Icon';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const links = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'skills', label: 'Skills' },
     { id: 'projects', label: 'Projects' },
+    { id: 'certifications', label: 'Certifications' },
     { id: 'contact', label: 'Contact' },
 ];
 
-export default function Navbar({ activeSection, theme, toggleTheme }) {
+export default function Navbar({ activeSection, theme, toggleTheme, env, onEnvChange }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -50,6 +52,9 @@ export default function Navbar({ activeSection, theme, toggleTheme }) {
                                 </a>
                             </li>
                         ))}
+                        <li>
+                            <ThemeSwitcher env={env} onChange={onEnvChange} />
+                        </li>
                         <li>
                             <button
                                 id="themeToggle"

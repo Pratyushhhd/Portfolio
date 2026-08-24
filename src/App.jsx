@@ -1,13 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import Icon from './components/Icon';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
+import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import PortfolioAssistant from './components/ai/PortfolioAssistant';
+
+const CyberLayer = lazy(() => import('./components/cyber/CyberLayer'));
+const CyberBoot = lazy(() => import('./components/cyber/CyberBoot'));
 
 function ScrollProgress() {
     useEffect(() => {
@@ -49,6 +53,7 @@ function FloatingNavDots({ activeSection }) {
         { id: 'about', label: 'About' },
         { id: 'skills', label: 'Skills' },
         { id: 'projects', label: 'Projects' },
+        { id: 'certifications', label: 'Certifications' },
         { id: 'contact', label: 'Contact' },
     ];
 
@@ -68,7 +73,7 @@ function FloatingNavDots({ activeSection }) {
     );
 }
 
-const sections = ['home', 'about', 'skills', 'projects', 'contact'];
+const sections = ['home', 'about', 'skills', 'projects', 'certifications', 'contact'];
 
 function App() {
     const [activeSection, setActiveSection] = useState('home');
@@ -79,11 +84,40 @@ function App() {
             (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
         );
     });
+    const [env, setEnv] = useState(() =>
+        document.documentElement.getAttribute('data-env') === 'cyber' ? 'cyber' : 'default'
+    );
+    const [bootKey, setBootKey] = useState(0);
+    const isFirstEnvRun = useRef(true);
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
     }, [theme]);
+
+    useEffect(() => {
+        const root = document.documentElement;
+        if (env === 'cyber') {
+            root.setAttribute('data-env', 'cyber');
+            localStorage.setItem('portfolio-env', 'cyber');
+        } else {
+            root.removeAttribute('data-env');
+            localStorage.removeItem('portfolio-env');
+        }
+        let t;
+        if (!isFirstEnvRun.current) {
+            root.classList.add('env-anim');
+            t = setTimeout(() => root.classList.remove('env-anim'), 800);
+        }
+        isFirstEnvRun.current = false;
+        return () => t && clearTimeout(t);
+    }, [env]);
+
+    const setEnvironment = useCallback((next) => {
+        if (next === env) return;
+        if (next === 'cyber') setBootKey(k => k + 1);
+        setEnv(next);
+    }, [env]);
 
     useEffect(() => {
         const obs = new IntersectionObserver((entries) => {
@@ -109,16 +143,27 @@ function App() {
     return (
         <>
             <ScrollProgress />
-            <Navbar activeSection={activeSection} theme={theme} toggleTheme={toggleTheme} />
+            <Navbar activeSection={activeSection} theme={theme} toggleTheme={toggleTheme} env={env} onEnvChange={setEnvironment} />
             <Home />
             <About />
             <Skills />
             <Projects />
+            <Certifications />
             <Contact />
             <Footer />
             <BackToTop />
             <FloatingNavDots activeSection={activeSection} />
             <PortfolioAssistant />
+            {env === 'cyber' && (
+                <Suspense fallback={null}>
+                    <CyberLayer />
+                </Suspense>
+            )}
+            {env === 'cyber' && bootKey > 0 && (
+                <Suspense fallback={null}>
+                    <CyberBoot key={bootKey} />
+                </Suspense>
+            )}
         </>
     );
 }

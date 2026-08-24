@@ -13,6 +13,9 @@
           var t = localStorage.getItem('theme');
           if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           document.documentElement.setAttribute('data-theme', t);
+          if (localStorage.getItem('portfolio-env') === 'cyber') {
+            document.documentElement.setAttribute('data-env', 'cyber');
+          }
         } catch (e) {}
       })();
     </script>
